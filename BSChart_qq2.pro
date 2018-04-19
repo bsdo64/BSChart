@@ -1,4 +1,4 @@
-QT += quick qml
+QT += core network quick qml
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,7 +13,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    bitmexauth.cpp \
+    bitmexclient.cpp
 
 RESOURCES += qml.qrc
 
@@ -27,3 +29,22 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    bitmexauth.h \
+    bitmexclient.h
+
+
+# 3rdparty/cryptopp700
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/3rdparty/cryptopp700/release/ -lcryptopp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/3rdparty/cryptopp700/debug/ -lcryptopp
+else:unix: LIBS += -L$$PWD/3rdparty/cryptopp700/ -lcryptopp
+
+INCLUDEPATH += $$PWD/3rdparty/cryptopp700
+DEPENDPATH += $$PWD/3rdparty/cryptopp700
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/release/libcryptopp.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/debug/libcryptopp.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/release/cryptopp.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/debug/cryptopp.lib
+else:unix: PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/libcryptopp.a

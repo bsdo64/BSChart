@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 import QtQuick.Window 2.2
 
-Window {
+ApplicationWindow {
     id: window
     visible: true
     minimumWidth: 640
@@ -14,7 +14,6 @@ Window {
         Button {
             id: button1
             text: "Ok"
-
         }
         Button {
             id: button2
@@ -27,7 +26,6 @@ Window {
                 border.width: 1
                 radius: 4
             }
-
         }
     }
 }
