@@ -29,7 +29,7 @@ BitmexClient::BitmexClient(
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    request.setUrl(QUrl("https://www.qt.io"));
+    request.setUrl(QUrl("http://doc.qt.io/"));
     request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
     request.setRawHeader("user-agent", "liquidbot-1");
     request.setRawHeader("content-type", "application/json");
@@ -38,6 +38,7 @@ BitmexClient::BitmexClient(
     QNetworkReply *reply = manager->get(request);
     connect(reply, SIGNAL(readyRead()),
             this, SLOT(slotReadyRead()));
+
 //    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
 //            this, SLOT(slotError(QNetworkReply::NetworkError)));
 //    connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
@@ -45,9 +46,18 @@ BitmexClient::BitmexClient(
 
 }
 
+BitmexClient::BitmexClient(string base_url, string symbol, string api_key, string api_secret)
+    : BitmexClient{base_url, symbol, api_key, api_secret, "mm_bitmex_", true, false, 7} { }
+
+BitmexClient::~BitmexClient()
+{
+
+}
+
 void BitmexClient::replyFinished(QNetworkReply* r)
 {
     QByteArray array = r->readAll();
+    std::string a = array.data();
 }
 
 

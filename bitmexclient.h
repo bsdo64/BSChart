@@ -15,8 +15,10 @@ public:
     BitmexClient(
             string base_url, string symbol, string api_key,
             string api_secret, string order_id_prefix, bool should_ws_auth,
-            bool post_only, int timeout
-        );
+            bool post_only, int timeout);
+    BitmexClient(
+            string base_url, string symbol, string api_key,
+            string api_secret);
     ~BitmexClient();
 
 public slots:
