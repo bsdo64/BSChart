@@ -1,8 +1,11 @@
 #include "bitmexclient.h"
+#include "bitmexauth.h"
 #include <QNetworkAccessManager>
 #include <QByteArray>
 #include <QUrl>
+#include <QDateTime>
 #include <iostream>
+#include <QJsonDocument>
 
 BitmexClient::BitmexClient(
         string base_url, string symbol, string api_key,
@@ -29,15 +32,31 @@ BitmexClient::BitmexClient(
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    request.setUrl(QUrl("http://doc.qt.io/"));
+    request.setUrl(QUrl("https://www.bitmex.com/api/v1/instrument"));
     request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
     request.setRawHeader("user-agent", "liquidbot-1");
     request.setRawHeader("content-type", "application/json");
     request.setRawHeader("accept", "application/json");
+    qint64 expires = QDateTime::currentSecsSinceEpoch() + 5;
+    QByteArray s_expires = QByteArray::number(expires);
+    request.setRawHeader("api-expires", s_expires);
+    request.setRawHeader("api-key", "hImUSySfSitmsaSrYv4IKecu");
+
+    QByteArray data = "GET/api/v1/instrument"+s_expires;
+    BitmexAuth auth;
+    string sign = auth.sign(
+                "0LC7T3jzS9M9Dk0Ce1sbUmKmg5rZ_sd352gYeLtCUtu6apzb",
+                data.toStdString());
+
+    request.setRawHeader("api-signature",
+                         QByteArray::fromStdString(sign));
+
 
     QNetworkReply *reply = manager->get(request);
     connect(reply, SIGNAL(readyRead()),
             this, SLOT(slotReadyRead()));
+
+    manager->get(request);
 
 //    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
 //            this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -57,10 +76,36 @@ BitmexClient::~BitmexClient()
 void BitmexClient::replyFinished(QNetworkReply* r)
 {
     QByteArray array = r->readAll();
-    std::string a = array.data();
+    QList<QByteArray> headerList = r->rawHeaderList();
+    foreach(QByteArray head, headerList) {
+        qDebug() << head << ":" << r->rawHeader(head);
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(array);
+
+
+    if(doc.isNull()){
+        qDebug()<<"Failed to create JSON doc.";
+
+    }
+    if(!doc.isObject()){
+        qDebug()<<"JSON is not an object.";
+
+    }
+
+    if(!doc.isArray()){
+        qDebug() << "JSON doc is not an array.";
+    }
+
+    QJsonArray json_array = doc.array();
+
+    for(int i=0; i< json_array.count(); ++i){
+        qDebug() << json_array.at(i).toString();
+    }
 }
 
 
 void BitmexClient::slotReadyRead() {
     std::cout << "read to read" << std::endl;
 }
+

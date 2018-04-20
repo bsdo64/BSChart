@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QAuthenticator>
 #include <string>
 using std::string;
 
