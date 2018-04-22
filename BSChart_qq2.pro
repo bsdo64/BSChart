@@ -12,6 +12,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+HEADERS += \
+    bitmexauth.h \
+    bitmexclient.h
+
+
 SOURCES += \
         main.cpp \
     bitmexauth.cpp \
@@ -30,11 +35,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    bitmexauth.h \
-    bitmexclient.h
-
-
 # 3rdparty/cryptopp700
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/3rdparty/cryptopp700/release/ -lcryptopp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/3rdparty/cryptopp700/debug/ -lcryptopp
@@ -48,3 +48,20 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cr
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/release/cryptopp.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/debug/cryptopp.lib
 else:unix: PRE_TARGETDEPS += $$PWD/3rdparty/cryptopp700/libcryptopp.a
+
+# /usr/local/Cellar/boost/1.66.0
+macx {
+    _BOOST_PATH = /usr/local/Cellar/boost/1.66.0
+    INCLUDEPATH += "$${_BOOST_PATH}/include/"
+    LIBS += -L$${_BOOST_PATH}/lib
+    ## Use only one of these:
+    ## LIBS += -lboost_chrono-mt # using dynamic lib (not sure if you need that "-mt" at the end or not)
+    ## LIBS += $${_BOOST_PATH}/lib/libboost_chrono-mt.a # using static lib
+}
+
+# /usr/local/Cellar/armadillo/8.400.0
+macx {
+    _ARMA_PATH = /usr/local/Cellar/armadillo/8.400.1
+    INCLUDEPATH += "$${_ARMA_PATH}/include/"
+    LIBS += -L$${_ARMA_PATH}/lib -larmadillo
+}

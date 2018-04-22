@@ -83,29 +83,28 @@ void BitmexClient::replyFinished(QNetworkReply* r)
 
     QJsonDocument doc = QJsonDocument::fromJson(array);
 
+//    if(doc.isNull()){
+//        qDebug()<<"Failed to create JSON doc.";
 
-    if(doc.isNull()){
-        qDebug()<<"Failed to create JSON doc.";
+//    }
+//    if(!doc.isObject()){
+//        qDebug()<<"JSON is not an object.";
 
-    }
-    if(!doc.isObject()){
-        qDebug()<<"JSON is not an object.";
+//    }
 
-    }
+//    if(!doc.isArray()){
+//        qDebug() << "JSON doc is not an array.";
+//    }
 
-    if(!doc.isArray()){
-        qDebug() << "JSON doc is not an array.";
-    }
+//    QJsonArray json_array = doc.array();
 
-    QJsonArray json_array = doc.array();
-
-    for(int i=0; i< json_array.count(); ++i){
-        qDebug() << json_array.at(i).toString();
-    }
+//    for(int i=0; i< json_array.count(); ++i){
+//        qDebug() << json_array.at(i).toString();
+//    }
 }
 
 
 void BitmexClient::slotReadyRead() {
-    std::cout << "read to read" << std::endl;
+//    std::cout << "read to read" << std::endl;
 }
 
